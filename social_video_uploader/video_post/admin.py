@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import VideoPost
-from .services import process_video_post
+from .tasks import process_video_task
 
 @admin.register(VideoPost)
 class VideoPostAdmin(admin.ModelAdmin):
@@ -11,4 +11,4 @@ class VideoPostAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        process_video_post(obj)  
+        process_video_task.delay(obj.id)
